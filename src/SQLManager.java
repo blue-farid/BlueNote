@@ -6,9 +6,21 @@ public class SQLManager {
     private static Connection connection;
     private static Statement statement;
 
+    public static Client getClient(String username) {
+        String query = "select * from clients where username='" + username + "'";
+        try {
+            statement.execute(query);
+            statement.getResultSet().next();
+            return new Client(statement.getResultSet().getString("username"),
+                    statement.getResultSet().getString("password"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static void addClient(Client client) {
-        String query = "insert into clients values (" +
-                client.getUsername() + ", " + client.getPassword() + ")";
+        String query = "insert into clients values (" + "'" +
+                client.getUsername() + "'" + ", " + "'" + client.getPassword() + "'" + ")";
         try {
             statement.execute(query);
         } catch (SQLException throwables) {
