@@ -1,3 +1,7 @@
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,10 +12,41 @@ public class BlueNote implements Runnable {
 
     @Override
     public void run() {
+        signInAndSignUpMenu();
+        cls();
         mainMenu();
     }
 
     private void mainMenu() {
+        System.out.println("1- Add\n2- Remove\n3- Notes\n4- Export");
+        int choose = chooseAnOption(1,4);
+        if (choose == 1) {
+            addNote();
+        }
+    }
+
+    private void addNote() {
+        System.out.println("choose a title:");
+        String title = scanner.nextLine();
+        System.out.println("feel free to write!\nenter '#' to finish!");
+        String body = readTheBody();
+        LocalDateTime now = LocalDateTime.now();
+        client.getNotes().add(new Note(title,body,now));
+        System.out.println("the new note has been saved successfully!");
+    }
+
+    private String readTheBody() {
+        String body = "";
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.equals("#"))
+                break;
+
+            body += input + "\n";
+        }
+        return body;
+    }
+    private void signInAndSignUpMenu() {
         System.out.println("1- sign in\n2- sign up");
         int choose = chooseAnOption(1, 2);
         if (choose == 1) {
@@ -89,5 +124,17 @@ public class BlueNote implements Runnable {
             }
         }
         return res;
+    }
+
+    public void cls()
+    {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else {
+                System.out.print("\033\143");
+            }
+        } catch (IOException | InterruptedException ex) {}
     }
 }
