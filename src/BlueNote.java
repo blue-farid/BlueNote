@@ -1,7 +1,6 @@
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,26 +11,66 @@ public class BlueNote implements Runnable {
 
     @Override
     public void run() {
-        signInAndSignUpMenu();
-        cls();
-        mainMenu();
-    }
-
-    private void mainMenu() {
-        System.out.println("1- Add\n2- Remove\n3- Notes\n4- Export");
-        int choose = chooseAnOption(1,4);
-        if (choose == 1) {
-            addNote();
+        while (true) {
+            if (signInAndSignUpMenu())
+                break;
+        }
+        while (true) {
+            mainMenu();
         }
     }
 
+    private void mainMenu() {
+        System.out.println("1- Add\n2- Remove\n3- Notes\n4- Exit");
+        int choose = chooseAnOption(1,4);
+        if (choose == 1) {
+            addNote();
+        } else if (choose == 2) {
+            removeNote();
+        } else if (choose == 3) {
+            notesFunc();
+        } else if (choose == 4) {
+            System.exit(0);
+        } else {
+            /* can't be fucking happen!*/
+        }
+    }
+
+    private void removeNote() {
+        Note chosenNote = chooseANote();
+        client.getNotes().remove(chosenNote);
+        SQLManager.removeNote(client, chosenNote);
+    }
+
+    private Note chooseANote() {
+        if (!displayNotes()) {
+            return null;
+        }
+        int choose = chooseAnOption(1,client.getNotes().size());
+        return client.getNotes().get(choose - 1);
+    }
+
+    private void notesFunc() {
+        Note chosenNote = chooseANote();
+        if (chosenNote == null)
+            return;
+        chosenNote.show();
+        System.out.println("\nenter 0 to back to main menu");
+        while (true) {
+            if (scanner.nextLine().equals("0")) {
+                break;
+            }
+        }
+    }
     private void addNote() {
         System.out.println("choose a title:");
         String title = scanner.nextLine();
         System.out.println("feel free to write!\nenter '#' to finish!");
         String body = readTheBody();
-        LocalDateTime now = LocalDateTime.now();
-        client.getNotes().add(new Note(title,body,now));
+        Date now = new Date(System.currentTimeMillis());
+        Note note = new Note(title,body,now);
+        client.getNotes().add(note);
+        SQLManager.addNote(client,note);
         System.out.println("the new note has been saved successfully!");
     }
 
@@ -46,17 +85,17 @@ public class BlueNote implements Runnable {
         }
         return body;
     }
-    private void signInAndSignUpMenu() {
+    private boolean signInAndSignUpMenu() {
         System.out.println("1- sign in\n2- sign up");
         int choose = chooseAnOption(1, 2);
         if (choose == 1) {
-            singIn();
+            return singIn();
         } else {
-            singUp();
+            return singUp();
         }
     }
 
-    private void singUp() {
+    private boolean singUp() {
         System.out.println("choose a username:");
         String username;
         while (true) {
@@ -71,15 +110,18 @@ public class BlueNote implements Runnable {
         String password = scanner.nextLine();
         client = new Client(username,password);
         SQLManager.addClient(client);
+        System.out.println("sign up!");
+        return true;
     }
 
-    private void singIn() {
+    private boolean singIn() {
         System.out.println("enter your username:");
         while (true) {
             String username = scanner.nextLine();
             client = SQLManager.getClient(username);
             if (client == null || client.getUsername() == null) {
                 System.out.println("username does not exist!");
+                return false;
             } else {
                 break;
             }
@@ -95,8 +137,24 @@ public class BlueNote implements Runnable {
                 System.out.println("password is wrong! try again.");
             }
         }
+        client.setNotes(SQLManager.findNotes(client));
+        return true;
     }
 
+    private boolean displayNotes() {
+        ArrayList<Note> notes = client.getNotes();
+
+        if (notes.size() == 0) {
+            System.out.println("there is no available note!");
+            return false;
+        }
+
+        int i = 1;
+        for (Note note: notes) {
+            System.out.println(i++ + "- " + note);
+        }
+        return true;
+    }
     private boolean checkTheValidityOfTheUsername(String theUsername) {
         ArrayList<String> usernames = SQLManager.getUsernames();
 

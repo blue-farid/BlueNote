@@ -1,14 +1,20 @@
-import java.time.LocalDateTime;
+import java.sql.Date;
 
 public class Note {
     private String title;
     private String body;
-    private LocalDateTime date;
+    private Date date;
 
-    public Note(String title, String body, LocalDateTime date) {
+    public Note(String title, String body, Date date) {
         this.title = title;
         this.body = body;
         this.date = date;
+    }
+
+    public void show() {
+        System.out.println("---\t" + title + "\t---");
+        System.out.println();
+        System.out.println(body);
     }
 
     public String getTitle() {
@@ -19,7 +25,12 @@ public class Note {
         return body;
     }
 
-    public LocalDateTime getDate() {
+    public Date getDate() {
         return date;
+    }
+
+    @Override
+    public String toString() {
+        return title + "\t\t" + date;
     }
 }

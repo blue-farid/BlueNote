@@ -22,4 +22,8 @@ public class Client {
     public String getPassword() {
         return password;
     }
+
+    public void setNotes(ArrayList<Note> notes) {
+        this.notes = notes;
+    }
 }

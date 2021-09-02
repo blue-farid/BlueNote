@@ -14,9 +14,34 @@ public class SQLManager {
             return new Client(statement.getResultSet().getString("username"),
                     statement.getResultSet().getString("password"));
         } catch (SQLException e) {
-            e.printStackTrace();
+
         }
         return null;
+    }
+
+    public static void addNote(Client client, Note note) {
+        String query = "insert into notes (username, title, body) values("
+                + "'" + client.getUsername() + "',"  + "'" +
+                note.getTitle() + "'," + "'" + note.getBody() + "'" +
+                ")";
+        try {
+            statement.execute(query);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void removeNote(Client client, Note note) {
+        String query = "delete from notes where username=" + "'" + client.getUsername() +
+                "'" + "and title='" + note.getTitle() + "'" +
+                "and body='" + note.getBody() + "'" +
+                "and date='" + note.getDate() + "'";
+
+        try {
+            statement.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     public static void addClient(Client client) {
         String query = "insert into clients values (" + "'" +
@@ -27,6 +52,25 @@ public class SQLManager {
             throwables.printStackTrace();
         }
     }
+
+    public static ArrayList<Note> findNotes(Client client) {
+        String query = "select * from notes where username=" + "'" +
+                client.getUsername() + "'";
+        try {
+            statement.execute(query);
+            ResultSet resultSet = statement.getResultSet();
+            ArrayList<Note> notes = new ArrayList<>();
+            while (resultSet.next()) {
+                notes.add(new Note(resultSet.getString("title"),
+                        resultSet.getString("body"), resultSet.getDate("date")));
+            }
+            return notes;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
     public static ArrayList<String> getUsernames() {
         String query = "select username from clients";
         try {
