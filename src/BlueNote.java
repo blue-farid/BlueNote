@@ -22,7 +22,7 @@ public class BlueNote implements Runnable {
 
     private void mainMenu() {
         System.out.println("1- Add\n2- Remove\n3- Notes\n4- Exit");
-        int choose = chooseAnOption(1,4);
+        int choose = chooseAnOption(1,4,false);
         if (choose == 1) {
             addNote();
         } else if (choose == 2) {
@@ -46,8 +46,12 @@ public class BlueNote implements Runnable {
         if (!displayNotes()) {
             return null;
         }
-        int choose = chooseAnOption(1,client.getNotes().size());
-        return client.getNotes().get(choose - 1);
+        int choose = chooseAnOption(1,client.getNotes().size(),true);
+        try {
+            return client.getNotes().get(choose - 1);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     private void notesFunc() {
@@ -87,7 +91,7 @@ public class BlueNote implements Runnable {
     }
     private boolean signInAndSignUpMenu() {
         System.out.println("1- sign in\n2- sign up");
-        int choose = chooseAnOption(1, 2);
+        int choose = chooseAnOption(1, 2,false);
         if (choose == 1) {
             return singIn();
         } else {
@@ -165,11 +169,13 @@ public class BlueNote implements Runnable {
         }
         return true;
     }
-    private int chooseAnOption(int indexMin, int indexMax) {
+    private int chooseAnOption(int indexMin, int indexMax, boolean zeroCondition) {
         int res = -1;
         while (true) {
             try {
                 res = Integer.parseInt(scanner.nextLine());
+                if (res == 0 && zeroCondition)
+                    return res;
                 if (res > indexMax || res < indexMin)
                     throw new IndexOutOfBoundsException();
 

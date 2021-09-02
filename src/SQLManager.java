@@ -34,8 +34,7 @@ public class SQLManager {
     public static void removeNote(Client client, Note note) {
         String query = "delete from notes where username=" + "'" + client.getUsername() +
                 "'" + "and title='" + note.getTitle() + "'" +
-                "and body='" + note.getBody() + "'" +
-                "and date='" + note.getDate() + "'";
+                "and body='" + note.getBody() + "'";
 
         try {
             statement.execute(query);
@@ -51,6 +50,12 @@ public class SQLManager {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    private static String formatQueryForExecution(String query) {
+        query = query.replace("'","");
+        query = query.replace('"',' ');
+        return query;
     }
 
     public static ArrayList<Note> findNotes(Client client) {
