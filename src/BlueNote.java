@@ -32,7 +32,7 @@ public class BlueNote implements Runnable {
         } else if (choose == 4) {
             System.exit(0);
         } else {
-            /* can't be fucking happen!*/
+            /* It can never fucking happen!*/
         }
     }
 
