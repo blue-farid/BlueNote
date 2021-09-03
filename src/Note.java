@@ -13,9 +13,10 @@ public class Note {
     }
 
     public void show() {
-        System.out.println("---\t" + title + "\t---");
-        System.out.println();
-        System.out.println(body);
+        System.out.printf(ConsoleColor.TEXT_BLUE_BRIGHT);
+        System.out.println("---\t" + title + "\t---\n");
+        System.out.printf(ConsoleColor.TEXT_CYAN_BRIGHT);
+        System.out.println(body + ConsoleColor.TEXT_RESET);
     }
 
     public String getTitle() {

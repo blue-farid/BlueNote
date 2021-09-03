@@ -1,5 +1,3 @@
-
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -14,7 +12,9 @@ public class BlueNote implements Runnable {
             if (signInAndSignUpMenu())
                 break;
         }
+
         while (true) {
+            System.out.println();
             mainMenu();
         }
     }
@@ -67,8 +67,10 @@ public class BlueNote implements Runnable {
     }
     private void addNote() {
         System.out.println("choose a title:");
+        System.out.printf(ConsoleColor.TEXT_BLUE_BRIGHT);
         String title = scanner.nextLine();
-        System.out.println("feel free to write!\nenter '#' to finish!");
+        System.out.print(ConsoleColor.TEXT_RESET);
+        System.out.println("feel free to write!\nenter '#' to finish!\n");
         String body = readTheBody();
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Note note = new Note(title,body,now);
@@ -78,6 +80,7 @@ public class BlueNote implements Runnable {
     }
 
     private String readTheBody() {
+        System.out.printf(ConsoleColor.TEXT_CYAN_BRIGHT);
         String body = "";
         while (true) {
             String input = scanner.nextLine();
@@ -86,8 +89,10 @@ public class BlueNote implements Runnable {
 
             body += input + "\n";
         }
+        System.out.printf(ConsoleColor.TEXT_RESET);
         return body;
     }
+
     private boolean signInAndSignUpMenu() {
         System.out.println("1- sign in\n2- sign up");
         int choose = chooseAnOption(1, 2,false);
@@ -106,7 +111,7 @@ public class BlueNote implements Runnable {
             if (checkTheValidityOfTheUsername(username)) {
                 break;
             } else {
-                System.out.println("the username is invalid! choose another one:");
+                printError("the username is invalid! choose another one:");
             }
         }
         System.out.println("choose a password:");
@@ -123,7 +128,7 @@ public class BlueNote implements Runnable {
             String username = scanner.nextLine();
             client = SQLManager.getClient(username);
             if (client == null || client.getUsername() == null) {
-                System.out.println("username does not exist!");
+                printError("username does not exist!");
                 return false;
             } else {
                 break;
@@ -137,7 +142,7 @@ public class BlueNote implements Runnable {
                 System.out.println("sign in!");
                 break;
             } else {
-                System.out.println("password is wrong! try again.");
+                printError("password is wrong! try again.");
             }
         }
         client.setNotes(SQLManager.findNotes(client));
@@ -148,16 +153,24 @@ public class BlueNote implements Runnable {
         ArrayList<Note> notes = client.getNotes();
 
         if (notes.size() == 0) {
-            System.out.println("there is no available note!");
+            printError("there is no available note!");
             return false;
         }
 
         int i = 1;
+        System.out.printf(ConsoleColor.TEXT_BLUE_BRIGHT);
         for (Note note: notes) {
             System.out.println(i++ + "- " + note);
         }
+        System.out.printf(ConsoleColor.TEXT_RESET);
         return true;
     }
+
+    private void printError(String str) {
+        System.out.print(ConsoleColor.TEXT_RED_BRIGHT + str);
+        System.out.println(ConsoleColor.TEXT_RESET);
+    }
+
     private boolean checkTheValidityOfTheUsername(String theUsername) {
         ArrayList<String> usernames = SQLManager.getUsernames();
 
@@ -181,23 +194,11 @@ public class BlueNote implements Runnable {
                 break;
 
             } catch (NumberFormatException e) {
-                System.out.println("enter a number!");
+                printError("enter a number!");
             } catch (IndexOutOfBoundsException e) {
-                System.out.println("out of bounds input!");
+                printError("out of bounds input!");
             }
         }
         return res;
-    }
-
-    private void cls()
-    {
-        try {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            }
-            else {
-                System.out.print("\033\143");
-            }
-        } catch (IOException | InterruptedException ex) {}
     }
 }
