@@ -23,8 +23,8 @@ public class SQLManager {
     }
 
     public static void addNote(Client client, Note note) {
-        String query = "insert into notes values(?,?,?,?)";
-
+        String query = "insert into notes (username, title, body, noteDate) " +
+                "values(?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1,client.getUsername());
@@ -68,6 +68,8 @@ public class SQLManager {
         String query = "select * from notes where username = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,client.getUsername());
+            ps.execute();
             ResultSet resultSet = ps.getResultSet();
             ArrayList<Note> notes = new ArrayList<>();
             while (resultSet.next()) {
