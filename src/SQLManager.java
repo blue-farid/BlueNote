@@ -7,12 +7,15 @@ public class SQLManager {
     private static Statement statement;
 
     public static Client getClient(String username) {
-        String query = "select * from clients where username='" + username + "'";
+        String query = "select * from clients where username = ?";
+
         try {
-            statement.execute(query);
-            statement.getResultSet().next();
-            return new Client(statement.getResultSet().getString("username"),
-                    statement.getResultSet().getString("password"));
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,username);
+            ps.execute();
+            ps.getResultSet().next();
+            return new Client(ps.getResultSet().getString("username"),
+                    ps.getResultSet().getString("password"));
         } catch (SQLException e) {
 
         }
@@ -20,54 +23,56 @@ public class SQLManager {
     }
 
     public static void addNote(Client client, Note note) {
-        String query = "insert into notes (username, title, body) values("
-                + "'" + client.getUsername() + "',"  + "'" +
-                note.getTitle() + "'," + "'" + note.getBody() + "'" +
-                ")";
+        String query = "insert into notes values(?,?,?,?)";
+
         try {
-            statement.execute(query);
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,client.getUsername());
+            ps.setString(2,note.getTitle());
+            ps.setString(3, note.getBody());
+            ps.setDate(4,note.getDate());
+            ps.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
     public static void removeNote(Client client, Note note) {
-        String query = "delete from notes where username=" + "'" + client.getUsername() +
-                "'" + "and title='" + note.getTitle() + "'" +
-                "and body='" + note.getBody() + "'";
+        String query = "delete from notes where username = ?" +
+                "and title = ? and body = ? and noteDate = ?";
 
         try {
-            statement.execute(query);
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,client.getUsername());
+            ps.setString(2,note.getTitle());
+            ps.setString(3,note.getBody());
+            ps.setDate(4,note.getDate());
+            ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
     public static void addClient(Client client) {
-        String query = "insert into clients values (" + "'" +
-                client.getUsername() + "'" + ", " + "'" + client.getPassword() + "'" + ")";
+        String query = "insert into clients values (?,?)";
         try {
-            statement.execute(query);
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,client.getUsername());
+            ps.setString(2,client.getPassword());
+            ps.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    private static String formatQueryForExecution(String query) {
-        query = query.replace("'","");
-        query = query.replace('"',' ');
-        return query;
-    }
-
     public static ArrayList<Note> findNotes(Client client) {
-        String query = "select * from notes where username=" + "'" +
-                client.getUsername() + "'";
+        String query = "select * from notes where username = ?";
         try {
-            statement.execute(query);
-            ResultSet resultSet = statement.getResultSet();
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet resultSet = ps.getResultSet();
             ArrayList<Note> notes = new ArrayList<>();
             while (resultSet.next()) {
                 notes.add(new Note(resultSet.getString("title"),
-                        resultSet.getString("body"), resultSet.getDate("date")));
+                        resultSet.getString("body"), resultSet.getDate("noteDate")));
             }
             return notes;
         } catch (SQLException throwables) {
