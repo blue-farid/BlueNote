@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class BlueNote implements Runnable {
     private Scanner scanner = new Scanner(System.in);
     private Client client;
-    private SQLManager sqlManager = new SQLManager();
 
     @Override
     public void run() {
