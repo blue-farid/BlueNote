@@ -189,7 +189,7 @@ public class BlueNote implements Runnable {
         return res;
     }
 
-    public void cls()
+    private void cls()
     {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
