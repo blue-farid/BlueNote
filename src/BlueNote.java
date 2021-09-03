@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BlueNote implements Runnable {
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private Client client;
 
     @Override
@@ -37,6 +37,10 @@ public class BlueNote implements Runnable {
 
     private void removeNote() {
         Note chosenNote = chooseANote();
+
+        if (chosenNote == null)
+            return;
+
         client.getNotes().remove(chosenNote);
         SQLManager.removeNote(client, chosenNote);
     }
@@ -67,7 +71,7 @@ public class BlueNote implements Runnable {
     }
     private void addNote() {
         System.out.println("choose a title:");
-        System.out.printf(ConsoleColor.TEXT_BLUE_BRIGHT);
+        System.out.print(ConsoleColor.TEXT_BLUE_BRIGHT);
         String title = scanner.nextLine();
         System.out.print(ConsoleColor.TEXT_RESET);
         System.out.println("feel free to write!\nenter '#' to finish!\n");
@@ -80,7 +84,7 @@ public class BlueNote implements Runnable {
     }
 
     private String readTheBody() {
-        System.out.printf(ConsoleColor.TEXT_CYAN_BRIGHT);
+        System.out.print(ConsoleColor.TEXT_CYAN_BRIGHT);
         String body = "";
         while (true) {
             String input = scanner.nextLine();
@@ -89,7 +93,7 @@ public class BlueNote implements Runnable {
 
             body += input + "\n";
         }
-        System.out.printf(ConsoleColor.TEXT_RESET);
+        System.out.print(ConsoleColor.TEXT_RESET);
         return body;
     }
 
@@ -124,15 +128,12 @@ public class BlueNote implements Runnable {
 
     private boolean singIn() {
         System.out.println("enter your username:");
-        while (true) {
-            String username = scanner.nextLine();
-            client = SQLManager.getClient(username);
-            if (client == null || client.getUsername() == null) {
-                printError("username does not exist!");
-                return false;
-            } else {
-                break;
-            }
+
+        String username = scanner.nextLine();
+        client = SQLManager.getClient(username);
+        if (client == null || client.getUsername() == null) {
+            printError("username does not exist!");
+            return false;
         }
 
         while (true) {
@@ -158,11 +159,11 @@ public class BlueNote implements Runnable {
         }
 
         int i = 1;
-        System.out.printf(ConsoleColor.TEXT_BLUE_BRIGHT);
+        System.out.print(ConsoleColor.TEXT_BLUE_BRIGHT);
         for (Note note: notes) {
             System.out.println(i++ + "- " + note);
         }
-        System.out.printf(ConsoleColor.TEXT_RESET);
+        System.out.print(ConsoleColor.TEXT_RESET);
         return true;
     }
 
@@ -174,6 +175,9 @@ public class BlueNote implements Runnable {
     private boolean checkTheValidityOfTheUsername(String theUsername) {
         ArrayList<String> usernames = SQLManager.getUsernames();
 
+        if (usernames == null)
+            return true;
+
         for (String username: usernames) {
             if (username.equalsIgnoreCase(theUsername)) {
                 return false;
@@ -182,7 +186,7 @@ public class BlueNote implements Runnable {
         return true;
     }
     private int chooseAnOption(int indexMin, int indexMax, boolean zeroCondition) {
-        int res = -1;
+        int res;
         while (true) {
             try {
                 res = Integer.parseInt(scanner.nextLine());

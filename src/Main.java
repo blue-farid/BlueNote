@@ -9,9 +9,7 @@ public class Main {
             int display = new ProcessBuilder("cmd", "/c", "color", "00").inheritIO().start().waitFor();
             System.out.print(display);
             cls();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
         new BlueNote().run();
