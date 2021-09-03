@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class Client {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
     private ArrayList<Note> notes;
     public Client(String username, String password) {
         this.username = username;

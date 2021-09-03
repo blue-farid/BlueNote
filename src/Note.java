@@ -2,9 +2,9 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 public class Note {
-    private String title;
-    private String body;
-    private Timestamp timestamp;
+    private final String title;
+    private final String body;
+    private final Timestamp timestamp;
 
     public Note(String title, String body, Timestamp timestamp) {
         this.title = title;
@@ -13,9 +13,9 @@ public class Note {
     }
 
     public void show() {
-        System.out.printf(ConsoleColor.TEXT_BLUE_BRIGHT);
+        System.out.print(ConsoleColor.TEXT_BLUE_BRIGHT);
         System.out.println("---\t" + title + "\t---\n");
-        System.out.printf(ConsoleColor.TEXT_CYAN_BRIGHT);
+        System.out.print(ConsoleColor.TEXT_CYAN_BRIGHT);
         System.out.println(body + ConsoleColor.TEXT_RESET);
     }
 

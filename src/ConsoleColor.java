@@ -1,4 +1,5 @@
 public class ConsoleColor {
+
     // TEXT_COLORS
 
     public static final String TEXT_RESET = "\u001B[0m";
