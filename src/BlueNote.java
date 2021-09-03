@@ -1,6 +1,6 @@
 
 import java.io.IOException;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -70,7 +70,7 @@ public class BlueNote implements Runnable {
         String title = scanner.nextLine();
         System.out.println("feel free to write!\nenter '#' to finish!");
         String body = readTheBody();
-        Date now = new Date(System.currentTimeMillis());
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         Note note = new Note(title,body,now);
         client.getNotes().add(note);
         SQLManager.addNote(client,note);

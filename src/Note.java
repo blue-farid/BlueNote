@@ -1,14 +1,15 @@
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class Note {
     private String title;
     private String body;
-    private Date date;
+    private Timestamp timestamp;
 
-    public Note(String title, String body, Date date) {
+    public Note(String title, String body, Timestamp timestamp) {
         this.title = title;
         this.body = body;
-        this.date = date;
+        this.timestamp = timestamp;
     }
 
     public void show() {
@@ -25,12 +26,13 @@ public class Note {
         return body;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
     @Override
     public String toString() {
-        return title + "\t\t" + date;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return title + "\t\t" + formatter.format(timestamp);
     }
 }

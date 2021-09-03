@@ -30,7 +30,7 @@ public class SQLManager {
             ps.setString(1,client.getUsername());
             ps.setString(2,note.getTitle());
             ps.setString(3, note.getBody());
-            ps.setDate(4,note.getDate());
+            ps.setTimestamp(4,note.getTimestamp());
             ps.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -46,7 +46,7 @@ public class SQLManager {
             ps.setString(1,client.getUsername());
             ps.setString(2,note.getTitle());
             ps.setString(3,note.getBody());
-            ps.setDate(4,note.getDate());
+            ps.setTimestamp(4,note.getTimestamp());
             ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class SQLManager {
             ArrayList<Note> notes = new ArrayList<>();
             while (resultSet.next()) {
                 notes.add(new Note(resultSet.getString("title"),
-                        resultSet.getString("body"), resultSet.getDate("noteDate")));
+                        resultSet.getString("body"), resultSet.getTimestamp("noteDate")));
             }
             return notes;
         } catch (SQLException throwables) {
