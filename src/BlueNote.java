@@ -20,8 +20,8 @@ public class BlueNote implements Runnable {
     }
 
     private void mainMenu() {
-        System.out.println("1- Add\n2- Remove\n3- Notes\n4- Exit");
-        int choose = chooseAnOption(1,4,false);
+        System.out.println("1- Add\n2- Remove\n3- Notes\n4- Export\n5- Exit");
+        int choose = chooseAnOption(1,5,false);
         if (choose == 1) {
             addNote();
         } else if (choose == 2) {
@@ -29,9 +29,27 @@ public class BlueNote implements Runnable {
         } else if (choose == 3) {
             notesFunc();
         } else if (choose == 4) {
+            exportFunc();
+        } else if (choose == 5) {
             System.exit(0);
         } else {
             /* It can never fucking happen!*/
+        }
+    }
+
+    private void exportFunc() {
+        Note chosenNote = chooseANote();
+
+        if (chosenNote == null) {
+            return;
+        }
+
+        if (new FileUtils().exportNote(chosenNote)) {
+            System.out.println("the note has been exported successfully!\n" +
+                    "you can find it on 'export' folder.");
+        } else {
+            System.out.println("something went wrong!\n" +
+                    "could not export the file!");
         }
     }
 

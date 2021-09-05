@@ -19,6 +19,9 @@ public class Note {
         System.out.println(body + ConsoleColor.TEXT_RESET);
     }
 
+    public String getDisplayFormat() {
+        return "---\t" + title + "\t---\n\n" + body;
+    }
     public String getTitle() {
         return title;
     }
