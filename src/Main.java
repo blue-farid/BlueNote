@@ -15,7 +15,7 @@ public class Main {
         new BlueNote().run();
     }
 
-    private static void cls()
+    public static void cls()
     {
         try {
             if (System.getProperty("os.name").contains("Windows")) {

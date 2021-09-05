@@ -1,5 +1,6 @@
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 public class BlueNote implements Runnable {
@@ -61,6 +62,7 @@ public class BlueNote implements Runnable {
 
         client.getNotes().remove(chosenNote);
         SQLManager.removeNote(client, chosenNote);
+        System.out.println("the note has been removed successfully!");
     }
 
     private Note chooseANote() {
@@ -79,6 +81,7 @@ public class BlueNote implements Runnable {
         Note chosenNote = chooseANote();
         if (chosenNote == null)
             return;
+        Main.cls();
         chosenNote.show();
         System.out.println("\nenter 0 to back to main menu");
         while (true) {
@@ -88,6 +91,7 @@ public class BlueNote implements Runnable {
         }
     }
     private void addNote() {
+        Main.cls();
         System.out.println("choose a title:");
         System.out.print(ConsoleColor.TEXT_BLUE_BRIGHT);
         String title = scanner.nextLine();
