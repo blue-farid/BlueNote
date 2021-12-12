@@ -21,8 +21,9 @@ public class BlueNote implements Runnable {
     }
 
     private void mainMenu() {
-        System.out.println("1- Add\n2- Remove\n3- Notes\n4- Export\n5- Exit");
-        int choose = chooseAnOption(1,5,false);
+        System.out.println("1- Add\n2- Remove\n3- Notes\n4- Append\n5- Export\n" +
+                "6- Exit");
+        int choose = chooseAnOption(1,6,false);
         if (choose == 1) {
             addNote();
         } else if (choose == 2) {
@@ -30,8 +31,10 @@ public class BlueNote implements Runnable {
         } else if (choose == 3) {
             notesFunc();
         } else if (choose == 4) {
-            exportFunc();
+            appendFunc();
         } else if (choose == 5) {
+            exportFunc();
+        } else if (choose == 6) {
             System.exit(0);
         } else {
             /* It can never fucking happen!*/
@@ -226,5 +229,23 @@ public class BlueNote implements Runnable {
             }
         }
         return res;
+    }
+
+    private void appendFunc() {
+        Note chosenNote = chooseANote();
+        if (chosenNote == null) {
+            return;
+        }
+        client.getNotes().remove(chosenNote);
+        SQLManager.removeNote(client, chosenNote);
+        Main.cls();
+        chosenNote.show();
+        String line = "---------------------------------------------";
+        System.out.println(line);
+        System.out.println("\nfeel free to write!\nenter '#' to finish!\n");
+        String body = readTheBody();
+        chosenNote.setBody(chosenNote.getBody() + line + "\n\n" + body);
+        client.getNotes().add(chosenNote);
+        SQLManager.addNote(client, chosenNote);
     }
 }

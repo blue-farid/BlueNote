@@ -1,9 +1,10 @@
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 
 public class Note {
     private final String title;
-    private final String body;
+    private String body;
     private final Timestamp timestamp;
 
     public Note(String title, String body, Timestamp timestamp) {
@@ -35,8 +36,25 @@ public class Note {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note note = (Note) o;
+        return Objects.equals(title, note.title) && Objects.equals(body, note.body) && Objects.equals(timestamp, note.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, body, timestamp);
+    }
+
+    @Override
     public String toString() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return title + "\t\t" + formatter.format(timestamp);
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 }

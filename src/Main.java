@@ -1,9 +1,18 @@
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        SQLManager.connectToDatabase();
+        try {
+            System.out.println("connecting to database...");
+            SQLManager.connectToDatabase();
+        } catch (SQLException e) {
+            Main.cls();
+            System.out.println("can't connect to database...");
+            new Scanner(System.in).nextLine();
+        }
 
         try {
             int display = new ProcessBuilder("cmd", "/c", "color", "00").inheritIO().start().waitFor();

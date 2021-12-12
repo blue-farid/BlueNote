@@ -99,7 +99,7 @@ public class SQLManager {
         }
         return null;
     }
-    public static void connectToDatabase() {
+    public static void connectToDatabase() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -108,12 +108,7 @@ public class SQLManager {
         String url = "jdbc:mysql://localhost:3306/blue_note";
         String username = "root";
         String password = "1234";
-
-        try {
-            connection = DriverManager.getConnection(url,username,password);
-            statement = connection.createStatement();
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
+        connection = DriverManager.getConnection(url,username,password);
+        statement = connection.createStatement();
     }
 }
